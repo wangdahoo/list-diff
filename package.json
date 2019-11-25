@@ -1,0 +1,26 @@
+{
+  "name": "list-diff",
+  "version": "0.1.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "gulp build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wangdahoo/list-diff.git"
+  },
+  "keywords": [],
+  "author": "wangdahoo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wangdahoo/list-diff/issues"
+  },
+  "homepage": "https://github.com/wangdahoo/list-diff#readme",
+  "devDependencies": {
+    "gulp": "^4.0.0",
+    "gulp-cli": "^2.2.0",
+    "gulp-typescript": "^6.0.0-alpha.1",
+    "typescript": "^3.7.2"
+  }
+}
