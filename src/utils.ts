@@ -5,7 +5,7 @@ export type E<T> = {
 
 export const difference = <T> (a: T[], b: T[]): E<T>[] =>
     a.reduce(
-        (r: E<T>[], value: T, index: number) => 
+        (r: E<T>[], value: T, index: number) =>
             r.concat(
                 b.indexOf(value) === -1
                     ? [{
@@ -17,12 +17,12 @@ export const difference = <T> (a: T[], b: T[]): E<T>[] =>
     )
 
 export const uniqBy = <T> (arr: T[], f: string): T[] => {
-    let r = []
-    let m: any = {}
+    const r = []
+    const m: any = {}
 
     for (let i = 0; i < arr.length; i++) {
-        let a: any = arr[i]
-        let k = a[f]
+        const a: any = arr[i]
+        const k = a[f]
 
         if (!m[k]) {
             r.push(a)
@@ -36,8 +36,8 @@ export const pick = (source: any, fileds: string[]) =>
     fileds.reduce(
         (result: any, field: string) => ({
             ...result,
-            ...(source[field] ? {[field]: source[field]} : {})
-        }), 
+            ...(source[field] ? { [field]: source[field] } : {})
+        }),
         {}
     )
 

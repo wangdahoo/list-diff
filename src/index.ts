@@ -2,66 +2,64 @@ import Patch, { PatchType } from './Patch'
 import { E, difference, uniqBy } from './utils'
 
 const listDiff = (a: string[], b: string[]): Patch[] => {
-    let patches: Patch[] = []
-    let deleted: E<string>[] = difference(a, b)
-    let added: E<string>[] = difference(a, b)
-    let repo: string[] = []
+    const patches: Patch[] = []
+    const deleted: E<string>[] = difference(a, b)
+    const added: E<string>[] = difference(a, b)
+    const repo: string[] = []
 
     const getMoves = (i: number, j: number): number => {
-        let deletedCount = deleted.filter((d: E<string>) => d.index <= j).length
-        let addedCount = added.filter((d: E<string>) => d.index <= j).length
+        const deletedCount = deleted.filter((d: E<string>) => d.index <= j).length
+        const addedCount = added.filter((d: E<string>) => d.index <= j).length
 
         return j - i + deletedCount - addedCount
     }
 
     /**
      * 基于最小编辑距离算法原理的 list-diff
-     * @description 
+     * @description
      * 令 a' = a.slice(i)，b' = b.slice(j)
      * 求 a' -> b' 的编辑距离
-     * 
-     * @param a 
+     * @param a
      * @param i start index of a
-     * @param b 
+     * @param b
      * @param j start index of b
      */
     function _ (a: string[], i: number, b: string[], j: number) {
         if (i === a.length) {
-            let _added: string[] = added.map((d: E<string>) => d.value)
+            const _added: string[] = added.map((d: E<string>) => d.value)
 
             patches.push(
                 ...b
                     .slice(j)
                     .filter(id => _added.indexOf(id) > -1)
-                    .map((id, i) => ({
-                      type: PatchType.ADD,
-                      id
+                    .map(id => ({
+                        type: PatchType.ADD,
+                        id
                     }))
             )
-      
+
             return
         }
 
         if (j === b.length) {
-            let _deleted = deleted.map(d => d.value)
-      
+            const _deleted = deleted.map(d => d.value)
             patches.push(
                 ...a
                     .slice(i)
                     .filter(id => _deleted.indexOf(id) > -1)
                     .map(id => ({
-                      type: PatchType.DELETE,
-                      id
+                        type: PatchType.DELETE,
+                        id
                     }))
             )
-      
+
             return
         }
 
         // 检查 a' 和 b' 的首个元素是否相同
         if (a[i] !== b[j]) {
             // 检查是否删除了 a[i]
-            let aPos = b.indexOf(a[i])
+            const aPos = b.indexOf(a[i])
             if (aPos === -1) {
                 // 删除了 a[i]
                 patches.push({
@@ -71,7 +69,7 @@ const listDiff = (a: string[], b: string[]): Patch[] => {
             }
 
             // 检查是否增加了 b[j]
-            let bPos = a.indexOf(b[j])
+            const bPos = a.indexOf(b[j])
             if (bPos === -1) {
                 // 增加了 b[j]
                 patches.push({
@@ -80,12 +78,12 @@ const listDiff = (a: string[], b: string[]): Patch[] => {
                 })
             }
 
-            let repoPatches: Patch[] = []
+            const repoPatches: Patch[] = []
 
             if (aPos > -1 && repo.indexOf(a[i]) === -1) {
                 // 如果 a[i] 没有被删除，则计算其移动的距离
-                let moves = getMoves(i, aPos)
-        
+                const moves = getMoves(i, aPos)
+
                 if (moves !== 0) {
                     repoPatches.push({
                         type: PatchType.REPOSITION,
@@ -93,24 +91,24 @@ const listDiff = (a: string[], b: string[]): Patch[] => {
                         moves,
                         step: [i, aPos].sort().join('->')
                     })
-        
+
                     repo.push(a[i])
                 }
             }
 
             if (bPos > -1 && repo.indexOf(b[j]) === -1) {
                 // 如果 b[j] 没有被删除，则计算其移动的距离
-                let moves = getMoves(bPos, j)
-        
+                const moves = getMoves(bPos, j)
+
                 if (moves !== 0) {
-                  repoPatches.push({
-                    type: PatchType.REPOSITION,
-                    id: b[j],
-                    moves,
-                    step: [bPos, j].sort().join('->')
-                  })
-        
-                  repo.push(b[j])
+                    repoPatches.push({
+                        type: PatchType.REPOSITION,
+                        id: b[j],
+                        moves,
+                        step: [bPos, j].sort().join('->')
+                    })
+
+                    repo.push(b[j])
                 }
             }
 
