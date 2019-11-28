@@ -78,7 +78,7 @@ const listDiff = (a: string[], b: string[]): Patch[] => {
                 })
             }
 
-            const repoPatches: Patch[] = []
+            let repoPatches: Patch[] = []
 
             if (aPos > -1 && repo.indexOf(a[i]) === -1) {
                 // 如果 a[i] 没有被删除，则计算其移动的距离
@@ -112,7 +112,9 @@ const listDiff = (a: string[], b: string[]): Patch[] => {
                 }
             }
 
-            patches.push(...uniqBy(repoPatches, 'step'))
+            repoPatches = uniqBy(repoPatches, 'step')
+
+            patches.push(...repoPatches)
         }
 
         _(a, i + 1, b, j + 1)

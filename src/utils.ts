@@ -24,12 +24,13 @@ export const uniqBy = <T> (arr: T[], f: string): T[] => {
         const a: any = arr[i]
         const k = a[f]
 
-        if (!m[k]) {
+        if (m[k] !== 1) {
+            m[k] = 1
             r.push(a)
         }
     }
 
-    return []
+    return r
 }
 
 export const pick = (source: any, fileds: string[]) =>

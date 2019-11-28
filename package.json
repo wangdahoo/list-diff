@@ -5,7 +5,8 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "gulp build",
-    "lint": "eslint ./ -c .eslintrc.js --ext .ts"
+    "lint": "eslint ./ -c .eslintrc.js --ext .ts",
+    "test": "mocha -r ts-node/register ./test/*.test.ts"
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,8 @@
   },
   "homepage": "https://github.com/wangdahoo/list-diff#readme",
   "devDependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/should": "^13.0.0",
     "@typescript-eslint/eslint-plugin": "^2.9.0",
     "@typescript-eslint/parser": "^2.9.0",
     "confusing-browser-globals": "^1.0.9",
@@ -31,6 +34,9 @@
     "gulp": "^4.0.0",
     "gulp-cli": "^2.2.0",
     "gulp-typescript": "^6.0.0-alpha.1",
+    "mocha": "^6.2.2",
+    "should": "^13.2.3",
+    "ts-node": "^8.5.3",
     "typescript": "^3.7.2"
   }
 }
