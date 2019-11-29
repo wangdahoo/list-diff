@@ -1,9 +1,28 @@
 const gulp = require('gulp')
-const ts = require('gulp-typescript')
-const tsProject = ts.createProject('tsconfig.json')
+const browserify = require('browserify')
+const tsify = require('tsify')
+const source = require('vinyl-source-stream')
+const fancy = require('fancy-log')
+const exorcist = require('exorcist')
+const tinyify = require('tinyify')
 
-gulp.task('build', function () {
-    return tsProject.src()
-        .pipe(tsProject())
-        .js.pipe(gulp.dest('dist'))
-})
+function build () {
+    const bundle = browserify({
+        basedir: '.',
+        debug: true,
+        entries: 'src/index.ts',
+        cache: {},
+        packageCache: {}
+    })
+        .plugin(tsify)
+        .plugin(tinyify)
+        .bundle()
+
+    return bundle
+        .pipe(exorcist('dist/list-diff.js.map'))
+        .on('error', fancy)
+        .pipe(source('list-diff.js'))
+        .pipe(gulp.dest('dist'))
+}
+
+gulp.task('build', gulp.series(build))

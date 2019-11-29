@@ -10,7 +10,7 @@
         "noImplicitAny": true,
         "target": "es5"
     },
-    "include": [
+    "exclude": [
         "./test/**/*.test.ts"
     ]
 }
