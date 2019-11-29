@@ -1,23 +1,29 @@
-import Patch, { PatchType } from './Patch'
-import { E, difference, uniqBy } from './utils'
+import { Patch, PatchType, Reposition } from './types'
+import { E, difference } from './utils'
 
 const listDiff = (a: string[], b: string[]): Patch[] => {
     const patches: Patch[] = []
     const deleted: E<string>[] = difference(a, b)
-    const added: E<string>[] = difference(a, b)
-    const repo: string[] = []
+    const added: E<string>[] = difference(b, a)
+    const repoHistory: Reposition[] = []
 
     const getMoves = (i: number, j: number): number => {
         const deletedCount = deleted.filter((d: E<string>) => d.index <= j).length
         const addedCount = added.filter((d: E<string>) => d.index <= j).length
+        const removeBeforeCount = repoHistory.filter((r: Reposition) => r.from < i && r.to > j).length
+        const insertBeforeCount = repoHistory.filter((r: Reposition) => r.from > j && r.to < i).length
 
-        return j - i + deletedCount - addedCount
+        return j - i + deletedCount - addedCount + removeBeforeCount - insertBeforeCount
+    }
+
+    const hasRepositioned = (id: string) => {
+        return repoHistory.filter((r: Reposition) => r.id === id).length > 0
     }
 
     /**
      * 基于最小编辑距离算法原理的 list-diff
      * @description
-     * 令 a' = a.slice(i)，b' = b.slice(j)
+     * 令 a' = a.slice(0)，b' = b.slice(0)
      * 求 a' -> b' 的编辑距离
      * @param a
      * @param i start index of a
@@ -43,6 +49,7 @@ const listDiff = (a: string[], b: string[]): Patch[] => {
 
         if (j === b.length) {
             const _deleted = deleted.map(d => d.value)
+
             patches.push(
                 ...a
                     .slice(i)
@@ -57,62 +64,77 @@ const listDiff = (a: string[], b: string[]): Patch[] => {
         }
 
         // 检查 a' 和 b' 的首个元素是否相同
-        if (a[i] !== b[j]) {
-            // 检查是否删除了 a[i]
-            const aPos = b.indexOf(a[i])
-            if (aPos === -1) {
-                // 删除了 a[i]
+        const aHead = a[i]
+        const bHead = b[j]
+
+        if (aHead !== bHead) {
+            // 检查是否删除了 aHead
+            const aHeadPos = b.indexOf(aHead)
+            if (aHeadPos === -1) {
+                // 删除了 aHead
                 patches.push({
                     type: PatchType.DELETE,
-                    id: a[i]
+                    id: aHead
                 })
             }
 
-            // 检查是否增加了 b[j]
-            const bPos = a.indexOf(b[j])
-            if (bPos === -1) {
-                // 增加了 b[j]
+            // 检查是否增加了 bHead
+            const bHeadPos = a.indexOf(bHead)
+            if (bHeadPos === -1) {
+                // 增加了 bHead
                 patches.push({
                     type: PatchType.ADD,
-                    id: b[j]
+                    id: bHead
                 })
             }
 
             let repoPatches: Patch[] = []
 
-            if (aPos > -1 && repo.indexOf(a[i]) === -1) {
-                // 如果 a[i] 没有被删除，则计算其移动的距离
-                const moves = getMoves(i, aPos)
+            if (aHeadPos > -1) {
+                if (!hasRepositioned(aHead)) {
+                    const r: Reposition = {
+                        id: aHead,
+                        from: i,
+                        to: aHeadPos
+                    }
 
-                if (moves !== 0) {
-                    repoPatches.push({
-                        type: PatchType.REPOSITION,
-                        id: a[i],
-                        moves,
-                        step: [i, aPos].sort().join('->')
-                    })
+                    // 如果 aHead 没有被删除，也没有移动过，则计算其移动的距离
+                    const moves = getMoves(i, aHeadPos)
 
-                    repo.push(a[i])
+                    if (moves !== 0) {
+                        repoPatches.push({
+                            type: PatchType.REPOSITION,
+                            id: aHead,
+                            moves
+                        })
+
+                        repoHistory.push(r)
+                    }
                 }
             }
 
-            if (bPos > -1 && repo.indexOf(b[j]) === -1) {
-                // 如果 b[j] 没有被删除，则计算其移动的距离
-                const moves = getMoves(bPos, j)
+            if (bHeadPos > -1) {
+                if (!hasRepositioned(bHead)) {
+                    const r: Reposition = {
+                        id: bHead,
+                        from: bHeadPos,
+                        to: j
+                    }
 
-                if (moves !== 0) {
-                    repoPatches.push({
-                        type: PatchType.REPOSITION,
-                        id: b[j],
-                        moves,
-                        step: [bPos, j].sort().join('->')
-                    })
+                    // 如果 bHead 没有被删除，也没有移动过，则计算其移动的距离
+                    const moves = getMoves(bHeadPos, j)
 
-                    repo.push(b[j])
+                    if (moves !== 0) {
+                        repoPatches.push({
+                            type: PatchType.REPOSITION,
+                            id: bHead,
+                            moves
+                        })
+
+                        repoHistory.push(r)
+                    }
                 }
             }
-
-            repoPatches = uniqBy(repoPatches, 'step')
 
             patches.push(...repoPatches)
         }

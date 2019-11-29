@@ -5,11 +5,14 @@ export enum PatchType {
     PROPERTIES = 'PROPERTIES'
 }
 
-type Patch = {
+export type Patch = {
     type: PatchType,
     id: string,
-    moves?: number,
-    step?: string
+    moves?: number
 }
 
-export default Patch
+export type Reposition = {
+    id: string,
+    from: number,
+    to: number
+}
