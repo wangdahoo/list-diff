@@ -34,15 +34,23 @@ export const listDiff = (a: string[], b: string[]): Patch[] => {
         if (i === a.length) {
             const _added: string[] = added.map((d: E<string>) => d.value)
 
+            const tail = b.slice(j)
+            const toAdd = tail.filter(id => _added.indexOf(id) > -1)
+
             patches.push(
-                ...b
-                    .slice(j)
-                    .filter(id => _added.indexOf(id) > -1)
-                    .map(id => ({
+                ...toAdd.reduce((patches: Patch[], id: string) => {
+                    const index = tail.indexOf(id)
+
+                    const after = index === 0
+                        ? (j > 0 ? b[j - 1] : '')
+                        : tail[index - 1]
+
+                    return patches.concat([{
                         type: PatchType.ADD,
                         id,
-                        after: j > 0 ? b[j - 1] : ''
-                    }))
+                        after
+                    }])
+                }, [])
             )
 
             return

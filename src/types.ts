@@ -8,7 +8,7 @@ export type Patch = {
     type: PatchType,
     id: string,
     moves?: number,
-    after?: string
+    after?: string|string[]
 }
 
 export type Reposition = {
