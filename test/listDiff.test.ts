@@ -1,7 +1,6 @@
 import 'mocha'
 import * as should from 'should'
-import { Patch, PatchType } from '../src/types'
-import listDiff from '../src/index'
+import { listDiff, Patch, PatchType } from '../src/index'
 
 const getCount = (patches: Patch[], type: PatchType) => patches.filter(p => p.type === type).length
 
