@@ -40,7 +40,8 @@ export const listDiff = (a: string[], b: string[]): Patch[] => {
                     .filter(id => _added.indexOf(id) > -1)
                     .map(id => ({
                         type: PatchType.ADD,
-                        id
+                        id,
+                        after: j > 0 ? b[j - 1] : ''
                     }))
             )
 
@@ -84,7 +85,8 @@ export const listDiff = (a: string[], b: string[]): Patch[] => {
                 // 增加了 bHead
                 patches.push({
                     type: PatchType.ADD,
-                    id: bHead
+                    id: bHead,
+                    after: j > 0 ? b[j - 1] : ''
                 })
             }
 

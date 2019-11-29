@@ -7,7 +7,8 @@ export enum PatchType {
 export type Patch = {
     type: PatchType,
     id: string,
-    moves?: number
+    moves?: number,
+    after?: string
 }
 
 export type Reposition = {
