@@ -12,7 +12,8 @@ function build () {
         debug: true,
         entries: 'src/index.ts',
         cache: {},
-        packageCache: {}
+        packageCache: {},
+        standalone: 'ListDiff'
     })
         .plugin(tsify)
         .plugin(tinyify)

@@ -1,54 +1,10 @@
 import 'mocha'
 import * as should from 'should'
-import { listDiff, Patch, PatchType, Tinker, applyPatches } from '../src/index'
+import { listDiff, Patch, PatchType, SimpleTinker, applyPatches } from '../src/index'
 
 const getCount = (patches: Patch[], type: PatchType) => patches.filter(p => p.type === type).length
 
-class MyTinker implements Tinker {
-    applyAdditon (input: string[], patch: Patch): string[] {
-        if (patch.type !== PatchType.ADD) return input
-
-        const { id, after } = patch
-        if (typeof after !== 'string') {
-
-            let afterIndex = -1
-            for (let i = after.length - 1; i > 0; i--) {
-                afterIndex = input.indexOf(after[i])
-                if (afterIndex > -1) break
-            }
-
-            return [...input.slice(0, afterIndex + 1), id, ...input.slice(afterIndex + 1)]
-        }
-
-        if (after === '') {
-            return [id, ...input]
-        }
-
-        const afterIndex = input.indexOf(after)
-        return [...input.slice(0, afterIndex + 1), id, ...input.slice(afterIndex + 1)]
-    }
-
-    applyDeletion (input: string[], patch: Patch): string[] {
-        if (patch.type !== PatchType.DELETE) return input
-
-        const { id } = patch
-        const deleteIndex = input.indexOf(id)
-        input.splice(deleteIndex, 1)
-        return input
-    }
-
-    applyRepostion (input: string[], patch: Patch): string[] {
-        if (patch.type !== PatchType.REPOSITION) return input
-
-        const { id, moves } = patch
-        const fromIndex = input.indexOf(id)
-        const toIndex = fromIndex + moves
-        input.splice(fromIndex, 1)
-        return [...input.slice(0, toIndex), id, ...input.slice(toIndex)]
-    }
-}
-
-const myTinker = new MyTinker()
+const myTinker = new SimpleTinker()
 
 describe('list-diff 测试', function () {
     it('用例 - 交换两个元素', function () {
