@@ -98,7 +98,7 @@ export const listDiff = (a: string[], b: string[]): Patch[] => {
                 })
             }
 
-            let repoPatches: Patch[] = []
+            const repoPatches: Patch[] = []
 
             if (aHeadPos > -1) {
                 if (!hasRepositioned(aHead)) {

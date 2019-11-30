@@ -6,7 +6,6 @@ export class SimpleTinker implements Tinker {
 
         const { id, after } = patch
         if (typeof after !== 'string') {
-
             let afterIndex = -1
             for (let i = after.length - 1; i > 0; i--) {
                 afterIndex = input.indexOf(after[i])

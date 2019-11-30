@@ -7,14 +7,14 @@ export const applyPatches = (input: string[], patches: Patch[], tinker: Tinker) 
         const patch = patches[i]
 
         switch (patch.type) {
-            case PatchType.ADD:
-                output = tinker.applyAdditon(output, patch)
-                break
-            case PatchType.DELETE:
-                output = tinker.applyDeletion(output, patch)
-                break
-            case PatchType.REPOSITION:
-                output = tinker.applyRepostion(output, patch)
+        case PatchType.ADD:
+            output = tinker.applyAdditon(output, patch)
+            break
+        case PatchType.DELETE:
+            output = tinker.applyDeletion(output, patch)
+            break
+        case PatchType.REPOSITION:
+            output = tinker.applyRepostion(output, patch)
         }
     }
 
