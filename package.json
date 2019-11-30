@@ -24,6 +24,7 @@
     "@types/should": "^13.0.0",
     "@typescript-eslint/eslint-plugin": "^2.9.0",
     "@typescript-eslint/parser": "^2.9.0",
+    "bannerify": "^1.0.1",
     "browserify": "^16.5.0",
     "confusing-browser-globals": "^1.0.9",
     "eslint": "^6.7.1",

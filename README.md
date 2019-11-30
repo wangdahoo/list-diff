@@ -5,7 +5,7 @@
 ## Usage
 
 ```js
-import { listDiff, applyPatches, SimpleTinker} from 'list-diff'
+import { listDiff, applyPatches, SimpleTinker } from 'list-diff'
 
 const a = ['1', '2', '3', '4', '5']
 const b = ['a', 'b', '4', 'c', '2', 'd', 'e']
