@@ -20,7 +20,7 @@ function build () {
         .plugin(tinyify)
         .plugin(bannerify, {
             template: `/**
- * @name    <%= pkg.name %>
+ * <%= pkg.name %>
  * @version <%= pkg.version %> | <%= moment().format('YYYY-MM-DD HH:mm:ss') %>
  * @author  <%= pkg.author %>
  * @license <%= pkg.license %>

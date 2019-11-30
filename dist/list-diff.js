@@ -1,6 +1,6 @@
 /**
- * @name    list-diff
- * @version 0.1.0 | 2019-12-01 00:57:47
+ * @wangdahoo/list-diff
+ * @version 0.1.0 | 2019-12-01 01:00:12
  * @author  wangdahoo
  * @license MIT
  */

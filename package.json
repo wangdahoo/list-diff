@@ -1,5 +1,5 @@
 {
-  "name": "list-diff",
+  "name": "@wangdahoo/list-diff",
   "version": "0.1.0",
   "description": "",
   "main": "dist/index.js",
