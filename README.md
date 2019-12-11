@@ -2,6 +2,12 @@
 
 > Algorithm to diff two string array.
 
+## Installation
+
+```bash
+npm i @wangdahoo/list-diff
+```
+
 ## Usage
 
 ```js
