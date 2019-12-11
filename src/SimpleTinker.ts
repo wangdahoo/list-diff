@@ -28,8 +28,7 @@ export class SimpleTinker implements Tinker {
 
         const { id } = patch
         const deleteIndex = input.indexOf(id)
-        input.splice(deleteIndex, 1)
-        return input
+        return [...input.slice(0, deleteIndex), ...input.slice(deleteIndex + 1)]
     }
 
     applyRepostion (input: string[], patch: Patch): string[] {
