@@ -1,8 +1,8 @@
 {
   "name": "@wangdahoo/list-diff",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/list-diff.js",
   "scripts": {
     "build": "gulp build",
     "lint": "eslint ./ -c .eslintrc.js --ext .ts --fix",
