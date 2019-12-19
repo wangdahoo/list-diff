@@ -11,7 +11,7 @@ npm i @wangdahoo/list-diff
 ## Usage
 
 ```js
-import { listDiff, applyPatches, SimpleTinker } from 'list-diff'
+import { listDiff, applyPatches, SimpleTinker } from '@wangdahoo/list-diff'
 
 const tinker = new SimpleTinker()
 
