@@ -1,6 +1,6 @@
 /**
      * @wangdahoo/list-diff
-     * @version 0.1.3 | 2019-12-20 12:58:37
+     * @version 0.1.4 | 2019-12-20 13:20:52
      * @author  wangdahoo
      * @license MIT
      */

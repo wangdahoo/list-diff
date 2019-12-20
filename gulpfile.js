@@ -7,9 +7,19 @@ const exorcist = require('exorcist')
 const tinyify = require('tinyify')
 const bannerify = require('bannerify')
 
-const defaultTarget = 'es5'
+function build (target = 'es5') {
+    let tsifyOptions = {}
+    let dist = 'dist'
 
-function build (target = defaultTarget) {
+    if (target === 'es6') {
+        tsifyOptions = {
+            target,
+            moduleResolution: 'ES6'
+        }
+
+        dist = `${dist}/${target}`
+    }
+
     return () => {
         const bundle = browserify({
             basedir: '.',
@@ -19,7 +29,7 @@ function build (target = defaultTarget) {
             packageCache: {},
             standalone: 'ListDiff'
         })
-            .plugin(tsify, { target })
+            .plugin(tsify, tsifyOptions)
             .plugin(tinyify)
             .plugin(bannerify, {
                 template: `/**
@@ -31,11 +41,6 @@ function build (target = defaultTarget) {
     `
             })
             .bundle()
-
-        let dist = 'dist'
-        if (target !== defaultTarget) {
-            dist = `${dist}/${target}`
-        }
 
         return bundle
             .pipe(exorcist(`${dist}/list-diff.js.map`))
