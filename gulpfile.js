@@ -7,33 +7,42 @@ const exorcist = require('exorcist')
 const tinyify = require('tinyify')
 const bannerify = require('bannerify')
 
-function build () {
-    const bundle = browserify({
-        basedir: '.',
-        debug: true,
-        entries: 'src/index.ts',
-        cache: {},
-        packageCache: {},
-        standalone: 'ListDiff'
-    })
-        .plugin(tsify)
-        .plugin(tinyify)
-        .plugin(bannerify, {
-            template: `/**
- * <%= pkg.name %>
- * @version <%= pkg.version %> | <%= moment().format('YYYY-MM-DD HH:mm:ss') %>
- * @author  <%= pkg.author %>
- * @license <%= pkg.license %>
- */
-`
-        })
-        .bundle()
+const defaultTarget = 'es5'
 
-    return bundle
-        .pipe(exorcist('dist/list-diff.js.map'))
-        .on('error', fancy)
-        .pipe(source('list-diff.js'))
-        .pipe(gulp.dest('dist'))
+function build (target = defaultTarget) {
+    return () => {
+        const bundle = browserify({
+            basedir: '.',
+            debug: true,
+            entries: 'src/index.ts',
+            cache: {},
+            packageCache: {},
+            standalone: 'ListDiff'
+        })
+            .plugin(tsify, { target })
+            .plugin(tinyify)
+            .plugin(bannerify, {
+                template: `/**
+     * <%= pkg.name %>
+     * @version <%= pkg.version %> | <%= moment().format('YYYY-MM-DD HH:mm:ss') %>
+     * @author  <%= pkg.author %>
+     * @license <%= pkg.license %>
+     */
+    `
+            })
+            .bundle()
+
+        let dist = 'dist'
+        if (target !== defaultTarget) {
+            dist = `${dist}/${target}`
+        }
+
+        return bundle
+            .pipe(exorcist(`${dist}/list-diff.js.map`))
+            .on('error', fancy)
+            .pipe(source('list-diff.js'))
+            .pipe(gulp.dest(dist))
+    }
 }
 
-gulp.task('build', gulp.series(build))
+gulp.task('build', gulp.series(build(), build('es6')))
