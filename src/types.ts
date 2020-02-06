@@ -7,18 +7,11 @@ export enum PatchType {
 export type Patch = {
     type: PatchType,
     id: string,
-    moves?: number,
-    after?: string|string[]
-}
-
-export type Reposition = {
-    id: string,
-    from: number,
-    to: number
+    after?: string
 }
 
 export interface Tinker {
-    applyAdditon (input: string[], addtionPatch: Patch): string[];
     applyDeletion (input: string[], deletionPatch: Patch): string[];
     applyRepostion (input: string[], repositionpPatch: Patch): string[];
+    applyAdditon (input: string[], addtionPatch: Patch): string[];
 }
