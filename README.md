@@ -1,6 +1,6 @@
 # list-diff
 
-> Algorithm to diff two string array.
+> A List-Diff Algorithm. Useful in Dom Diff.
 
 ## Installation
 
@@ -11,9 +11,7 @@ npm i @wangdahoo/list-diff
 ## Usage
 
 ```js
-const { listDiff, applyPatches, SimpleTinker } = require('@wangdahoo/list-diff')
-
-const tinker = new SimpleTinker()
+const { listDiff, applyPatches } = require('@wangdahoo/list-diff')
 
 const a = ['1', '2', '3', '4', '5']
 const b = ['a', 'b', '4', 'c', '2', 'd', 'e']
@@ -23,16 +21,17 @@ console.log(patches)
 
 // output:
 // [ { type: 'DELETE', id: '1' },
+//   { type: 'DELETE', id: '3' },
+//   { type: 'DELETE', id: '5' },
+//   { type: 'REPOSITION', id: '4', after: '' },
+//   { type: 'REPOSITION', id: '2', after: '4' },
 //   { type: 'ADD', id: 'a', after: '' },
 //   { type: 'ADD', id: 'b', after: 'a' },
-//   { type: 'REPOSITION', id: '2', moves: 3 },
-//   { type: 'DELETE', id: '3' },
 //   { type: 'ADD', id: 'c', after: '4' },
-//   { type: 'DELETE', id: '5' },
 //   { type: 'ADD', id: 'd', after: '2' },
 //   { type: 'ADD', id: 'e', after: 'd' } ]
 
-console.log(applyPatches(a, patches, tinker))
+console.log(applyPatches(a, patches))
 
 // output:
 // [ 'a', 'b', '4', 'c', '2', 'd', 'e' ]
@@ -42,17 +41,17 @@ console.log(patches)
 
 // output:
 // [ { type: 'DELETE', id: 'a' },
-//   { type: 'ADD', id: '1', after: '' },
 //   { type: 'DELETE', id: 'b' },
-//   { type: 'REPOSITION', id: '2', moves: -2 },
-//   { type: 'ADD', id: '3', after: '2' },
-//   { type: 'REPOSITION', id: '4', moves: 1 },
 //   { type: 'DELETE', id: 'c' },
-//   { type: 'ADD', id: '5', after: '4' },
 //   { type: 'DELETE', id: 'd' },
-//   { type: 'DELETE', id: 'e' } ]
+//   { type: 'DELETE', id: 'e' },
+//   { type: 'REPOSITION', id: '2', after: '' },
+//   { type: 'REPOSITION', id: '4', after: '2' },
+//   { type: 'ADD', id: '1', after: '' },
+//   { type: 'ADD', id: '3', after: '2' },
+//   { type: 'ADD', id: '5', after: '4' } ]
 
-console.log(applyPatches(b, patches, tinker))
+console.log(applyPatches(b, patches))
 
 // output:
 // ['1', '2', '3', '4', '5']
